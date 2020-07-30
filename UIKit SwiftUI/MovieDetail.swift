@@ -11,6 +11,7 @@ import SwiftUI
 struct MovieDetail: View {
     @EnvironmentObject var movie: Movie
     let delegate: TableViewControllerDelegate?
+    let indexPath: IndexPath
     
     var body: some View {
         VStack {
@@ -23,8 +24,8 @@ struct MovieDetail: View {
                 }
                 Spacer()
                 Button(action: {
-                    self.movie.isFavorite = !self.movie.isFavorite
-                    self.delegate?.didSetFavorite(name: self.movie.title, isFavorite: self.movie.isFavorite)
+                    self.movie.isFavorite.toggle()
+                    self.delegate?.didSetFavorite(indexPath: self.indexPath)
                 }) {
                     if movie.isFavorite {
                         Image(systemName: "suit.heart.fill")
@@ -56,6 +57,6 @@ struct MovieDetail: View {
 struct MovieDetail_Previews: PreviewProvider {
     static var previews: some View {
         let movie = Movie(title: "Titanic", year: 2001, cast: ["Leonardo DiCaprio", "Kate Winslet"], genres: ["Drama", "Family", "Horror", "Comedy", "Documentary", "Romance"])
-        return MovieDetail(delegate: nil).environmentObject(movie)
+        return MovieDetail(delegate: nil, indexPath: IndexPath(row: 0, section: 0)).environmentObject(movie)
     }
 }

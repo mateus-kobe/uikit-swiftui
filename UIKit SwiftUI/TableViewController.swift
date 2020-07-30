@@ -10,7 +10,7 @@ import UIKit
 import SwiftUI
 
 protocol TableViewControllerDelegate {
-    func didSetFavorite(name: String, isFavorite: Bool)
+    func didSetFavorite(indexPath: IndexPath)
 }
 
 class TableViewController: UITableViewController {
@@ -63,7 +63,7 @@ class TableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let movie = data[indexPath.row]
-        let movieDetail = MovieDetail(delegate: self).environmentObject(movie)
+        let movieDetail = MovieDetail(delegate: self, indexPath: indexPath).environmentObject(movie)
         let detail = UIHostingController(rootView: movieDetail)
         detail.modalPresentationStyle = .popover
         navigationController?.present(detail, animated: true, completion: nil)
@@ -91,13 +91,7 @@ private extension TableViewController {
 
 extension TableViewController: TableViewControllerDelegate {
     
-    func didSetFavorite(name: String, isFavorite: Bool) {
-        for i in 0..<data.count {
-            if data[i].title == name {
-                data[i].isFavorite = isFavorite
-                tableView.reloadRows(at: [IndexPath(row: i, section: 0)], with: .automatic)
-                break
-            }
-        }
+    func didSetFavorite(indexPath: IndexPath) {
+        tableView.reloadRows(at: [indexPath], with: .automatic)
     }
 }
